@@ -1,0 +1,324 @@
+/*////////////////////////////////////////////////////////////////////////////*/
+/* Variabler */
+/* Fargepalett fra: https://github.com/romainl/Apprentice */
+/*////////////////////////////////////////////////////////////////////////////*/
+
+:root {
+  --colorFg: #BCBCBC;
+  --colorBg: #262626;
+  --color0:  #1C1C1C;
+  --color1:  #AF5F5F;
+  --color2:  #5F875F;
+  --color3:  #87875F;
+  --color4:  #5F87AF;
+  --color5:  #5F5F87;
+  --color6:  #5F8787;
+  --color7:  #6C6C6C;
+  --color8:  #444444;
+  --color9:  #FF8700;
+  --color10: #87AF87;
+  --color11: #FFFFAF;
+  --color12: #87AFD7;
+  --color13: #8787AF;
+  --color14: #5FAFAF;
+  --color15: #FBFBFB;
+  --themeBg: var(--color15);
+  --themeFg: var(--colorBg);
+  --themeBorder: var(--color7);
+  --footerHeight: 120px;
+  --navWidth: 180px;
+  --sepSize: 20px;
+  --sectionMargin: 5rem;
+}
+
+
+/*////////////////////////////////////////////////////////////////////////////*/
+/* Grunnstruktur */
+/*////////////////////////////////////////////////////////////////////////////*/
+
+body {
+  margin: 0;
+  color: var(--themeFg);
+  background: var(--themeBg);
+  font-family: sans-serif;
+}
+
+*,:after,:before {
+  box-sizing:border-box;
+  color:inherit;
+  margin:0;
+  padding:0;
+}
+
+#outer-wrapper, #left-wrapper, #right-wrapper {
+  display: flex;
+}
+
+#outer-wrapper, #right-wrapper {
+  gap: var(--sepSize)
+}
+
+#outer-wrapper {
+  min-height: 100vh;
+  padding:0 var(--sepSize);
+}
+
+#right-wrapper {
+  flex-direction: column;
+}
+
+header {
+  max-width: 140px;
+  margin: 0 auto;
+}
+
+footer {
+  min-height: var(--footerHeight);
+}
+
+
+/*////////////////////////////////////////////////////////////////////////////*/
+/* Versjon for de fleste skjermer */
+/*////////////////////////////////////////////////////////////////////////////*/
+
+@media screen and (width > 1000px) {
+  #outer-wrapper {
+    justify-content: center;
+  }
+  
+  #left-wrapper {
+    align-self: flex-start;
+    flex: 1;
+    max-width: var(--navWidth);
+    position: sticky;
+    top: 0;
+    flex-direction: column;
+  }
+  
+  #right-wrapper {
+    flex: 5;
+    max-width: min(calc(100vw - var(--navWidth)), 800px);
+  }
+  
+  nav {
+    min-height: calc(var(--footerHeight) * 2);
+  }
+  
+  main {
+    min-height: calc(100vh - var(--footerHeight) - var(--sepSize));
+  }
+  
+  nav ul {
+    border-right: 1px dotted var(--themeBorder);
+  }
+  
+  nav ul li:not(:last-child) {
+      margin-bottom: 3px;
+  }
+}
+
+
+/*////////////////////////////////////////////////////////////////////////////*/
+/* Mobilversjon */
+/*////////////////////////////////////////////////////////////////////////////*/
+
+@media screen and (width <= 1000px) {
+  #outer-wrapper {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  #left-wrapper {
+    align-items: center;
+    align-content: flex-end;
+  }
+  
+  main {
+    min-height: calc(100vh - var(--footerHeight) * 2 - var(--sepSize) * 2);
+  }
+
+  nav ul li {
+      display: inline-block;
+  }
+  nav ul li:not(:last-child) {
+      padding-right: 1rem;
+  }
+} 
+
+
+/*////////////////////////////////////////////////////////////////////////////*/
+/* Wireframing for utvikling av design */
+/*////////////////////////////////////////////////////////////////////////////*/
+
+#wireframe {
+  nav, main, footer {
+    background: var(--themeFg);
+    color: var(--themeBg);
+    text-align:center;
+    font-size: 2em;
+  }
+  @media screen and (width <= 1000px) {
+    nav, main, footer {
+      background: red;
+    }
+  }
+}
+
+
+/*////////////////////////////////////////////////////////////////////////////*/
+/* HTML tagger */
+/*////////////////////////////////////////////////////////////////////////////*/
+
+a {
+  color: var(--color1);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--color9);
+}
+
+p {
+  padding: 0.5rem 0;
+}
+
+h1,h2,h3,h4,h5 {
+  line-height: 1;
+  padding: 0.5rem 0;
+  font-weight: 600;
+}
+
+img {
+  max-width:100%;
+}
+
+hr {
+  border:0;
+  border-bottom: 1px dotted var(--themeBorder);
+  width: 40%;
+  margin: 0 auto var(--sectionMargin) auto;
+}
+
+nav ul {
+  list-style: none;
+}
+
+section {
+  padding-bottom: var(--sectionMargin);
+}
+
+nav {
+  padding: 0.5rem 1rem 0.5rem 2rem;
+}
+
+footer {
+  text-align:center;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+
+/*////////////////////////////////////////////////////////////////////////////*/
+/* Andre containere */
+/*////////////////////////////////////////////////////////////////////////////*/
+
+main {
+  padding-top: var(--sepSize);
+}
+
+.kontakt div, .produkter div, img.bg, .kontakt img {
+  border: 1px dotted var(--themeBorder);
+}
+
+.kontakt div, .produkter div, img.bg {
+  box-shadow:0 5px 20px rgba(0,0,0,.05);
+  color: var(--themeBorder);
+  font-size: 0.825rem;
+}
+
+.kontakt, .produkter, .imgs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem 0.5rem;
+  margin: 2rem 0;
+}
+
+.kontakt div, .produkter div, img.bg {
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  background: var(--themeBg);
+  background-image: radial-gradient(#f2f2f2 1px, transparent 0);
+  background-size: 8px 8px;
+  background-position: -3px -3px;
+}
+
+.produkter div {
+  padding-top: 0;
+  padding-right:0;
+  padding-left:0;
+  width:190px;
+  display:flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-content: center;
+}
+
+.produkter img {
+  background: #efece8;
+}
+
+.produkter p {
+  padding: 0.35rem 1rem 0.25rem 1rem;
+}
+
+.produkter p:nth-of-type(1) {
+  font-weight: bold;
+  color: var(--color8);
+  font-size: 1.15rem;
+}
+
+.produkter p:nth-of-type(2) {
+  flex-grow: 2;
+}
+
+.produkter p:nth-of-type(3) {
+  font-weight: bold;
+  font-size: 1.30rem;
+}
+
+.kontakt, .imgs {
+  justify-content: space-evenly;
+  flex-direction: row;
+}
+
+.kontakt div {
+  text-align: center;
+  width:190px;
+}
+
+.kontakt img {
+  background: var(--themeBg);
+  padding: 0.5rem;
+  max-height: 160px;
+  max-width: 160px;
+  margin: 0 auto;
+  border-radius: 50%;
+}
+
+.kontakt p {
+  padding-top: 0;
+  padding-bottom: 0.15rem;
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.kontakt p:nth-of-type(1) {
+  font-weight: bold;
+  color: var(--color8);
+  padding-top: 0.35rem;
+}
+
+.kontakt p:nth-of-type(2) {
+  padding-top: 0.15rem;
+}
+
