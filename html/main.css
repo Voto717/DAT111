@@ -160,6 +160,7 @@ footer {
   @media screen and (width <= 1000px) {
     nav, main, footer {
       background: red;
+      width:100%;
     }
   }
 }

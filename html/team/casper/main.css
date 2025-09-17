@@ -1,0 +1,78 @@
+/*////////////////////////////////////////////////////////////////////////////*/
+/* Variabler */
+/* Borland fargepalett fra: https://github.com/Gogh-Co/Gogh */
+/*////////////////////////////////////////////////////////////////////////////*/
+
+:root {
+  --colorBg: #0000A4;
+  --colorFg: #FFFF4E;
+  --color0:  #4F4F4F;
+  --color1:  #FF6C60;
+  --color2:  #A8FF60;
+  --color3:  #FFFFB6;
+  --color4:  #96CBFE;
+  --color5:  #FF73FD;
+  --color6:  #C6C5FE;
+  --color7:  #EEEEEE;
+  --color8:  #7C7C7C;
+  --color9:  #FFB6B0;
+  --color10: #CEFFAC;
+  --color11: #FFFFCC;
+  --color12: #B5DCFF;
+  --color13: #FF9CFE;
+  --color14: #DFDFFE;
+  --color15: #FFFFFF;
+  --themeBg: var(--colorBg);
+  --themeFg: var(--colorFg);
+  --footerHeight: 50px;
+  --margin: 2rem;
+}
+
+
+/*////////////////////////////////////////////////////////////////////////////*/
+/* Fonts */
+/*////////////////////////////////////////////////////////////////////////////*/
+
+@font-face {
+  font-family: "IBM VGA 8x16";
+  src: url('./PxPlus_IBM_VGA_8x16.ttf');
+}
+
+
+/*////////////////////////////////////////////////////////////////////////////*/
+/* Containere */
+/*////////////////////////////////////////////////////////////////////////////*/
+
+body {
+  margin: 0;
+  color: var(--themeFg);
+  background: var(--themeBg);
+  font-family: "IBM VGA 8x16";
+}
+a {
+  color: var(--color5);
+  text-decoration-style: dashed;
+}
+a:hover {
+  color: var(--color7);
+}
+#wrapper, main {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+}
+main {
+  max-width: 800px;
+  min-height: calc(100vh - var(--footerHeight) - var(--margin));
+}
+footer {
+  padding-top: var(--sepSize);
+  min-height: var(--footerHeight);
+}
+.sep {
+  padding: var(--margin) 0;
+}
+
