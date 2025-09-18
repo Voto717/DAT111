@@ -24,7 +24,7 @@
   --color15: #FFFFFF;
   --themeBg: var(--colorBg);
   --themeFg: var(--colorFg);
-  --footerHeight: 50px;
+  --footerHeight: 1rem;
   --margin: 2rem;
 }
 

@@ -12,9 +12,12 @@ function genName() {
   var name = ""
   const charsAll = 'abcdefghijklmnopqrstuvwxyz';
   const charsCommon = 'aeou';
-  const length = Math.floor(Math.max(3, Math.random() * 12));
+  const charsUncommon = 'bcdfghijklmnrstv';
+  const charsRare = 'xyzq';
+  const length = Math.floor(Math.max(3, Math.random() * 8));
   for (var i = 0; i < length; i++) {
-    const chars = i > 0 ? (Math.random() < 0.5 ? charsCommon : charsAll) : charsAll;
+
+    const chars = i > 0 ? (Math.random() < 0.6 ? charsCommon : (Math.random() < 0.7 ?  charsUncommon : charsRare)) : charsAll;
     var char = chars.charAt(Math.floor(Math.random() * chars.length));
     name += char;
   }
