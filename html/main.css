@@ -25,10 +25,21 @@
   --themeBg: var(--color15);
   --themeFg: var(--colorBg);
   --themeBorder: var(--color7);
-  --footerHeight: 120px;
+  --footerHeight: 50px;
+  --mobileHeaderHeight: 100px;
   --navWidth: 180px;
-  --sepSize: 20px;
+  --sepSize: 16px;
   --sectionMargin: 5rem;
+}
+
+
+/*////////////////////////////////////////////////////////////////////////////*/
+/* Fonter */
+/*////////////////////////////////////////////////////////////////////////////*/
+
+@font-face {
+  font-family: "Source Sans 3";
+  src: url('./font/SourceSans3-Medium.ttf');
 }
 
 
@@ -40,7 +51,7 @@ body {
   margin: 0;
   color: var(--themeFg);
   background: var(--themeBg);
-  font-family: sans-serif;
+  font-family: "Source Sans 3", sans-serif;
 }
 
 *,:after,:before {
@@ -60,16 +71,14 @@ body {
 
 #outer-wrapper {
   min-height: 100vh;
-  padding:0 var(--sepSize);
+  padding-top: calc(var(--sepSize) * 0.5);
+  padding-bottom: calc(var(--sepSize) * 0.5);
+  padding-left: var(--sepSize);
+  padding-right: var(--sepSize);
 }
 
 #right-wrapper {
   flex-direction: column;
-}
-
-header {
-  max-width: 140px;
-  margin: 0 auto;
 }
 
 footer {
@@ -100,12 +109,22 @@ footer {
     max-width: min(calc(100vw - var(--navWidth)), 800px);
   }
   
+  header {
+    max-width: 140px;
+    margin: 0 auto;
+  }
+
+  nav {
+    padding: 0.5rem 1rem 0.5rem 2rem;
+  }
+
   nav {
     min-height: calc(var(--footerHeight) * 2);
   }
   
   main {
-    min-height: calc(100vh - var(--footerHeight) - var(--sepSize));
+    padding-top: var(--sepSize);
+    min-height: calc(100vh - var(--footerHeight) - var(--sepSize) * 3);
   }
   
   nav ul {
@@ -129,19 +148,45 @@ footer {
   }
 
   #left-wrapper {
-    align-items: center;
-    align-content: flex-end;
+    align-items: flex-end;
+    align-content: center;
+    justify-content:flex-start;
+    gap: calc(var(--sepSize) * 0.5);
   }
   
   main {
-    min-height: calc(100vh - var(--footerHeight) * 2 - var(--sepSize) * 2);
+    min-height: calc(100vh - var(--footerHeight) - var(--mobileHeaderHeight) - var(--sepSize) * 4);
+  }
+
+  header {
+    max-width: var(--mobileHeaderHeight);
+  }
+  header {
+  }
+
+  nav {
+    font-size: 1.25rem;
+    border-top: 1px dotted var(--themeBorder);
+    border-bottom: 1px dotted var(--themeBorder);
+  }
+  nav {
   }
 
   nav ul li {
-      display: inline-block;
+    float:left;
   }
-  nav ul li:not(:last-child) {
-      padding-right: 1rem;
+  
+  nav ul li:nth-of-type(4) {
+    clear:left;
+  }
+
+  nav ul li:not(:last-of-type):not(:nth-of-type(3)):after{
+    content: '·';
+    padding-left: 0.35rem;
+  }
+  
+  nav ul li:not(:last-of-type):not(:nth-of-type(3)) {
+    padding-right: 0.35rem;
   }
 } 
 
@@ -185,7 +230,7 @@ p {
 
 h1,h2,h3,h4,h5 {
   line-height: 1;
-  padding: 0.5rem 0;
+  padding: 0 0 0.5rem 0;
   font-weight: 600;
 }
 
@@ -204,28 +249,18 @@ nav ul {
   list-style: none;
 }
 
-section {
+section:not(:last-of-type) {
   padding-bottom: var(--sectionMargin);
-}
-
-nav {
-  padding: 0.5rem 1rem 0.5rem 2rem;
 }
 
 footer {
   text-align:center;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
 }
 
 
 /*////////////////////////////////////////////////////////////////////////////*/
 /* Andre containere */
 /*////////////////////////////////////////////////////////////////////////////*/
-
-main {
-  padding-top: var(--sepSize);
-}
 
 .kontakt div, .produkter div, img.bg, .kontakt img {
   border: 1px dotted var(--themeBorder);
