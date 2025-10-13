@@ -262,11 +262,11 @@ footer {
 /* Andre containere */
 /*////////////////////////////////////////////////////////////////////////////*/
 
-.kontakt div, .produkter div, img.bg, .kontakt img {
+.kontakt div, .produkter div, img.bg, .kontakt img, .maps {
   border: 1px dotted var(--themeBorder);
 }
 
-.kontakt div, .produkter div, img.bg {
+.kontakt div, .produkter div, img.bg, .maps {
   box-shadow:0 5px 20px rgba(0,0,0,.05);
   color: var(--themeBorder);
   font-size: 0.825rem;
@@ -279,8 +279,11 @@ footer {
   margin: 2rem 0;
 }
 
+.kontakt div, .produkter div, img.bg, .maps {
+    border-radius: 6px;
+  }
+
 .kontakt div, .produkter div, img.bg {
-  border-radius: 6px;
   padding: 0.75rem 1rem;
   background: var(--themeBg);
   background-image: radial-gradient(#f2f2f2 1px, transparent 0);
