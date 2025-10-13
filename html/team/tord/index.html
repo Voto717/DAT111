@@ -1,28 +1,377 @@
 <!DOCTYPE html>
-<html lang = "no">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="./img/favicon.png">
-    <title>Tord Johan Melheim</title>
-    <style>
-      main {
-        display: flex;
-        justify-content: center;
-        align-content: center;
-        align-items: center;
-        height:100vh;
-      }
-    </style>
-  </head>
-  <body>
-    <header>
-    </header>
-    <main>
-      <img src="../../img/construction.gif">
-    </main>
-    <footer>
-    </footer>
-  </body>
-</html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prosjektmedlem Tord</title>
+  <link rel="icon" type="image/x-icon" href="images/hvllogo.jpg">
+  <style>
+	
 
+    /* Box sizing reset */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    /* Side Navigation */
+    .sidenav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 160px;
+      height: 100%;
+      background-color: #111;
+      padding-top: 20px;
+      overflow-x: hidden;
+      z-index: 1;
+    }
+
+    .sidenav a {
+      display: block;
+      padding: 6px 8px 6px 16px;
+      font-size: 25px;
+      color: #818181;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .sidenav a:hover {
+      color: #f1f1f1;
+    }
+
+    /* Main Content */
+    .main {
+      margin-left: 160px;
+      padding: 0 20px;
+      font-size: 28px;
+	  
+    }
+
+    /* Profile Section Layout */
+    .profile-section {
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      gap: 40px;
+      margin-top: 20px;
+	  padding: 0 20px;
+    }
+
+    /* Profile Card */
+    .profile-card {
+      max-width: 350px;
+      box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.5);
+      border-radius: 10px;
+      overflow: hidden;
+      background-color: #fff;
+    }
+
+    .profile-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .profile-card .container {
+      padding: 20px;
+      text-align: center;
+    }
+
+    .profile-card .title {
+      color: grey;
+      font-size: 18px;
+      margin: 10px 0;
+    }
+
+    .profile-card .button {
+      border: none;
+      outline: 0;
+      padding: 10px 20px;
+      color: white;
+      background-color: #000;
+      text-align: center;
+      cursor: pointer;
+      width: 100%;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+
+    .profile-card .button:hover {
+      background-color: #555;
+    }
+
+    /* Paragraph Text */
+    .profile-text {
+      flex: 1;
+      font-size: 20px;
+      line-height: 1.6;
+    }
+	.profile-text p {
+	margin-top: 0;
+	}
+	
+	.list-row {
+		display: flex;
+		gap: 40px; /* space between the lists */
+		align-items: flex-start;
+		margin-top: 20px;
+		font-size: 18px;
+	}
+
+	.list-row ul,
+	.list-row ol {
+		margin: 0;
+		padding: 0 20px;
+	}
+	
+
+    /* Button Group */
+    .btn-group {
+      margin-top: 30px;
+    }
+
+    .btn-group button {
+      background-color: #636363;
+      border: 1px solid black;
+      color: white;
+      padding: 10px 25px;
+      cursor: pointer;
+      float: left;
+    }
+
+    .btn-group button:not(:last-child) {
+      border-right: none;
+    }
+
+    .btn-group button:hover {
+      background-color: #4D4B4B;
+    }
+
+    .btn-group::after {
+      content: "";
+      clear: both;
+      display: table;
+    }
+	
+    
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      border: 2px solid #444;
+	  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      margin-top: 40px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 16px;
+    }
+
+    tr:nth-child(even) {
+      background-color: #eaeaea;
+    }
+	tr:nth-child(odd) {
+      background-color: #f2f2f2;
+    }
+	
+	div.gallery {
+  border: 1px solid #ccc;
+}
+
+div.gallery:hover {
+  border: 1px solid #777;
+}
+
+div.gallery img {
+  width: 100%;
+  height: auto;
+}
+
+div.desc {
+  padding: 15px;
+  text-align: center;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.responsive {
+  padding: 0 6px;
+  float: left;
+  width: 25%;
+}
+
+@media only screen and (max-width: 700px) {
+  .responsive {
+    width: 50%;
+    margin: 6px 0;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .responsive {
+    width: 100%;
+  }
+}
+
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+  </style>
+</head>
+<body style="background-image: url(images/bckg.jpg); background-repeat: no-repeat; background-size: cover;">
+
+  <div class="sidenav">
+    <a href="../../kontakt.html">Tilbake til hovedside</a>
+    <a href="#Overskrift">Profil</a>
+    <a href="#Tabell">Tabell</a>
+    <a href="#Bildegalleri">Bildegalleri</a>
+  </div>
+
+  <div class="main">
+    <center><h1 id="Overskrift">Velkommen til profilsiden min</h1></center>
+
+    <div class="profile-section">
+      <div class="profile-card">
+        <img src="images/tord.jpg" alt="Tord Melheim">
+        <div class="container">
+          <h2 style="font-size: 24;">Tord Melheim</h2>
+          <p class="title">Student</p>
+          <p style="font-size: 20px;">Medlem av gruppe 16, DAT111/ING100</p>
+          <p style="font-size: 22px;">tomel3120@hvl.no</p>
+          <a href="mailto:tomel3120@hvl.no"><button class="button">Kontakt</button></a>
+        </div>
+      </div>
+
+      <div class="profile-text">
+        <p>Å jobbe med dette prosjektet har vært veldig lærerikt. På denne siden har jeg prøvd å ta med en rekke forskjellige elementer. 
+		Jeg har med en tittel, med en liten logo av HVL. Jeg har med en navigasjonsbar, 
+		der den ene knappen er en ekstern knapp som tar deg tilbake til Hovedsiden for prosjektet vårt, 
+		i tillegg til noen interne knapper der du kan navigere til de ulike elementene på denne siden.
+		Jeg har lagt inn et bakgrunnsbilde, en overskrift og et profilkort på venstre side med denne teksten på høyre side.
+		På profilkortet har jeg lagt inn et bilde av meg selv, litt info og en "kontakt via epost" knapp.
+		Nedenfor har jeg også laget noen knappegrupper som leder til forskjellige sider. 
+		Under det finnes en tabell, som jeg har stylet og fylt med info.
+		Helt underst på siden er et bildegalleri.
+		</p>
+        <p><strong>Ulike lister og tekst-formatteringer.</strong></p>
+		
+<div class="list-row">
+  <ul>
+    <li>Deler av denne teksten <i>er kursiv</i></li>
+    <li>Deler av denne teksten <u>er understreket</u></li>
+    <li>Deler av denne teksten <b>er fet</b></li>
+    <li>Deler av denne teksten <s>er gjennomstreket</s></li>
+  </ul>
+
+  <ol>
+    <li>Deler av denne teksten <mark>er markert</mark></li>
+    <li>Deler av denne teksten <span style="color:red;">er farget</span></li>
+    <li>Deler av denne teksten <sup>er hevet</sup></li>
+    <li>Deler av denne teksten <sub>er senket</sub></li>
+  </ol>
+</div>
+		<br>
+		<p>
+        I listene ovenfor har jeg gått gjennom forskjellige tekst formatteringer.
+		Jeg har listet dem i både ordnede og uordnede lister.
+		I den uordnede listen har jeg kursiv, fet, understreket, gjennomstreket tekst.
+		I den ordnede listen har jeg markert, farget, hevet og senket tekst.
+		Ved hjelp av css styling har jeg fått disse listene på linje med hverandre slik at det ser ryddig ut. 
+		</p>
+		
+		<div class="btn-group">
+      <button onclick="location.href='https://hvl.no'">HVL Hjemmeside</button>
+      <button onclick="location.href='https://www.nrk.no'">NRK</button>
+      <button onclick="location.href='https://www.finansavisen.no'">Finansavisen</button>
+	  <button onclick="location.href='https://www.e24.no'">E24</button>
+      <button onclick="location.href='https://www.vg.no'">VG</button>
+      <button onclick="location.href='https://www.google.com'">Google</button>
+    </div>
+      </div>
+    </div>
+
+<br>
+<br>
+<div class="tabell" id="Tabell">
+    <h2>Førermesterskap F1 1993 Topp 5 tabell</h2>
+    <table>
+      <tr>
+        <th>Posisjon</th>
+        <th>Fører</th>
+        <th>Lag</th>
+        <th>Poeng</th>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td>Alain Prost</td>
+        <td>Williams Renault</td>
+        <td>99</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Ayrton Senna</td>
+        <td>McLaren Ford</td>
+        <td>73</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>Damon Hill</td>
+        <td>Williams Renault</td>
+        <td>69</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>Michael Schumacher</td>
+        <td>Benetton Ford</td>
+        <td>52</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>Riccardo Patrese</td>
+        <td>Benetton Ford</td>
+        <td>20</td>
+		</tr>
+		</table>
+	</div>
+<br>
+<br>
+<div class="Bildegalleri">
+    <h2 id="Bildegalleri">Bildegalleri</h2>
+	
+	
+<div class="responsive">
+  <div class="gallery">
+    <a target="_blank" href="images/wireframe1.jpg">
+      <img src="images/wireframe1.jpg" alt="Cinque Terre" width="600" height="400">
+    </a>
+    <div class="desc">Wireframe1</div>
+  </div>
+</div>
+
+
+<div class="responsive">
+  <div class="gallery">
+    <a target="_blank" href="images/wireframe3.png">
+      <img src="images/wireframe3.png" alt="Forest" width="600" height="400">
+    </a>
+    <div class="desc">Wireframe2</div>
+  </div>
+</div>
+
+<div class="responsive">
+  <div class="gallery">
+    <a target="_blank" href="images/wireframe2.jpg">
+      <img src="images/wireframe2.jpg" alt="Northern Lights" width="600" height="400">
+    </a>
+    <div class="desc">Wireframe3</div>
+  </div>
+</div>
+
+<div class="clearfix"></div>
+<div style="padding:6px;">
+</div>
+</div>
