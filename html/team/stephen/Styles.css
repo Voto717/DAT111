@@ -1,0 +1,13 @@
+table, tr, td,th{
+border:2px solid black;}
+h1 {color:blue;} 
+h2 {color:blue;}
+
+body { background-color: #F5E027;}
+
+img {
+	padding: 1px;
+	margin: 100px;
+	border: 10px solid blue;
+}
+	
