@@ -79,6 +79,7 @@ footer {
 table {
   margin:auto;
   border: 4px double var(--color1);
+  border-radius:4px;
 }
 table td {
   padding: 0.5rem;
