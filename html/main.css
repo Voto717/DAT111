@@ -361,3 +361,10 @@ footer {
   padding-top: 0.15rem;
 }
 
+.praktisk:first-of-type {
+  padding-top: calc(var(--sectionMargin) * 0.5);
+}
+
+.praktisk:not(:last-of-type) {
+  padding-bottom: var(--sectionMargin);
+}

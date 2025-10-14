@@ -69,10 +69,26 @@ main {
   min-height: calc(100vh - var(--footerHeight) - var(--margin));
 }
 footer {
-  padding-top: var(--sepSize);
+  padding-top: var(--margin);
   min-height: var(--footerHeight);
 }
 .sep {
   padding: var(--margin) 0;
 }
 
+table {
+  margin:auto;
+  border: 4px double var(--color1);
+}
+table td {
+  padding: 0.5rem;
+}
+table tr:first-child {
+  font-weight:bold;
+}
+table tr:not(:first-child) td {
+  border-top: 1px dashed var(--color9);
+}
+table td:not(:first-child) {
+  border-left: 1px dashed var(--color9);
+}
