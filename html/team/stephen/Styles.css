@@ -3,11 +3,19 @@ border:2px solid black;}
 h1 {color:blue;} 
 h2 {color:blue;}
 
+table, th, td {
+  border: 1px solid white;
+  border-collapse: collapse;
+}
+th, td {
+  background-color: #96D4D4;
+}
+
 body { background-color: #F5E027;}
 
 img {
 	padding: 1px;
-	margin: 100px;
+	margin: 50px;
 	border: 10px solid red;
 }
 	
