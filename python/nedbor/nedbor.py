@@ -1,167 +1,321 @@
-# importing modules and packages
-import pandas as pd
-import numpy as np
-
+# Import
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
+from matplotlib.lines import Line2D
 from matplotlib.widgets import RadioButtons
-
+from matplotlib.widgets import Cursor
+from matplotlib.backend_tools import Cursors
+import numpy as np
+import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn import preprocessing
 from sklearn.preprocessing import PolynomialFeatures
 
-fig = plt.figure(figsize=(10, 4))
-axGraph = fig.add_axes((0.05, 0.07, 0.35, 0.85))
-axMap = fig.add_axes((0.41, 0.07, 0.59, 0.85))
-colors = [ 'orange', 'gray', 'blue', 'darkblue', 'black']
-img = mpimg.imread('map.png')
-df = pd.read_csv('data.csv')
-poly = PolynomialFeatures(degree=3)
+# Farger (fra: https://github.com/romainl/Apprentice)
+colors = {
+    0:'#1C1C1C',
+    1:'#AF5F5F',
+    2:'#5F875F',
+    3:'#87875F',
+    4:'#5F87AF',
+    5:'#5F5F87',
+    6:'#5F8787',
+    7:'#6C6C6C',
+    8:'#444444',
+    9:'#FF8700',
+    10:'#87AF87',
+    11:'#FFFFAF',
+    12:'#87AFD7',
+    13:'#8787AF',
+    14:'#5FAFAF',
+    15:'#FFFFFF',
+    'fg':'#BCBCBC',
+    'bg':'#262626',
+}
+
+# Oppsett av utseende
+theme = {
+    'fg': colors['fg'],
+    'bg': colors[0],
+    'ax_bg': colors['bg'],
+    'radio_face': colors['fg'],
+    'radio_edge': colors['fg'],
+    'precipitation': [ colors[2], colors[6], colors[4], colors[13], colors[5] ],
+    'line': colors['fg'],
+    'line_avg': colors[1],
+    'cursor': colors['fg'],
+    'bar_label': colors[15],
+    'precipitation_map_circle_fg':colors[15],
+    'precipitation_map_circle_shadow':colors['bg'],
+    'precipitation_map_circle_border':colors['fg'],
+    'precipitation_map_sel_fg': colors[15],
+    'precipitation_map_sel_shadow': colors['bg'],
+    'precipitation_map_circle_font_size':6,
+    'precipitation_map_sel_font_size':8,
+    'precipitation_map_circle_size':600,
+    'precipitation_map_sel_point_size':300,
+    'shadow_dist':0.04,
+}
+
+# Default verdier for mpl
+mpl.rcParams['text.color'] = theme['fg']
+mpl.rcParams['axes.labelcolor'] = theme['fg']
+mpl.rcParams['xtick.color'] = theme['fg']
+mpl.rcParams['ytick.color'] = theme['fg']
+mpl.rcParams['axes.edgecolor'] = theme['fg']
+mpl.rcParams['legend.labelcolor'] = theme['fg']
+mpl.rcParams["legend.edgecolor"] = theme['fg']
+mpl.rcParams["legend.facecolor"] = theme['bg']
+mpl.rcParams['axes.titlepad'] = 12
+
+# Import av data
+map_img = mpimg.imread('map.png')
+data = pd.read_csv('data.csv')
+
+# Globale variabler
+p = None
+sel_time = 0
+color_limits = [1300, 1700, 2500, 3200]
+time_options = ['monthly', 'quarterly']
+time_names = ['måned', 'kvartal']
+
+# Oppsett av globale mpl og sklearn variabler
+fig, ax = plt.subplot_mosaic(
+    [
+        ['map','graph'],
+        ['map_btns','graph_btns'],
+    ],
+    width_ratios=[5,5],
+    height_ratios=[9,1],
+    layout='constrained',
+    figsize=(16, 6),
+    facecolor=theme['bg'],
+)
+for a in ax:
+    ax[a].set_facecolor(theme['ax_bg'])
+cursor = Cursor(ax['map'], useblit=True, color=theme['cursor'], linewidth=1)
+poly = PolynomialFeatures(degree=4)
 model = LinearRegression()
 
-# Entry-point for programmet
+
+# Main funksjon
 def main():
-    draw_label_and_ticks()
-    
-    axMap.set_title("Årsnedbør, Stor Bergen")
-    axGraph.set_title("Per måned")
-    
-
-    fig.subplots_adjust(left=0, right=1, top=1, bottom=0) # Adjust the figure to fit the image
-    axMap.margins(x=0.01, y=0.01)  # Adjust x and y margins
-
-    # Read rain data, and split in train and test.py data
-    
-    marked_point = (0,0)
-    ns = df['Nedbor']
-    X = df.drop('Nedbor',  axis=1)
-    
+    # Matplotlib oppsett
+    graph_btns = RadioButtons(
+        ax['graph_btns'], (time_names[0].title(), time_names[1].title()),
+        radio_props={'facecolor': theme['radio_face'], 'edgecolor': theme['radio_edge']})
+    map_btns = RadioButtons(
+        ax['map_btns'], ('Nedbør', 'Vind (ikke implementert!)'),
+        radio_props={'facecolor': theme['radio_face'], 'edgecolor': theme['radio_edge']})
+    plt.connect('button_press_event', map_click)
+    fig.canvas.mpl_connect('motion_notify_event', map_hover)
+    graph_btns.on_clicked(change_timeframe)
+    map_btns.on_clicked(change_datatype)
+    ax['graph_btns'].axis('off')
+    ax['map_btns'].axis('off')
+    # Sklearn oppsett
+    data_precipitation = data['precipitation']
+    X = data.drop('precipitation',  axis=1)
     X_poly = poly.fit_transform(X)
     X_train, X_test, Y_train, Y_test = train_test_split(
-        X_poly, ns, test_size=0.25)
-
-    # creating a regression model
-    
-    model.fit(X_train, Y_train) # fitting the model
+        X_poly, data_precipitation, test_size=0.25)
+    model.fit(X_train, Y_train)
     Y_pred = model.predict(X_test)
-
-    # Check model quality
     r_squared = r2_score(Y_test, Y_pred)
     print(f"R-squared: {r_squared:.2f}")
     print('mean_absolute_error (mnd) : ', mean_absolute_error(Y_test, Y_pred))
-
-    
-    draw_the_map()
-
-    plt.connect('button_press_event', on_click)
+    # Tegn grafikk
+    draw_map()
+    draw_graph()
     plt.show()
 
-def draw_the_map():
-    # Accumulate all months to year
-    axMap.cla()
-    plt.imshow(img, extent=(0, 13, 0, 10))
-    df_year = df.groupby(['X', 'Y']).agg({'Nedbor': 'sum'}).reset_index()
-    xr = df_year['X'].tolist()
-    yr = df_year['Y'].tolist()
-    nedborAar = df_year['Nedbor']
-    ColorList = [color_from_nedbor(n) for n in nedborAar]
-    axMap.scatter(xr, yr, c=ColorList, s=size_from_nedbor(nedborAar/12), alpha=1)
-    labels = [label_from_nedbor(n) for n in nedborAar]
-    for i, y in enumerate(xr):
-        axMap.text(xr[i], yr[i], s=labels[i], color='white', fontsize=10, ha='center', va='center')
-    axMap.axis('off')
 
-def index_from_nedbor(x):
-    if x < 1300: return 0
-    if x < 1700: return 1
-    if x < 2500: return 2
-    if x < 3200: return 3
-    return 4
+# Håndter musbevegelse
+def map_hover(event):
+    fig.canvas.set_cursor(Cursors.SELECT_REGION if event.inaxes == ax['map'] else Cursors.POINTER)
 
-def color_from_nedbor(nedbor):
-    return colors[index_from_nedbor(nedbor)]
-def size_from_nedbor(nedbor):
-    return 350
-def label_from_nedbor(nedbor):
-    return str(int(nedbor / 100))
 
-def on_click(event) :
-    global marked_point
-    if event.inaxes != axMap:
+# Håndter klikking på kartet
+def map_click(event):
+    global p
+    if event.inaxes != ax['map']:
         return
-
-    marked_point = (event.xdata, event.ydata)
-    x,y = marked_point
-
+    p = {'x': event.xdata, 'y': event.ydata}
     vectors = []
     months = np.linspace(1,12,12)
     for mnd in months:
-        vectors.append([x,y,mnd])
-    AtPoint = np.vstack(vectors)
-    # fitting the model, and predict for each month
-    AtPointM = poly.fit_transform(AtPoint)
-    y_pred = model.predict(AtPointM)
-    aarsnedbor = sum(y_pred)
-
-    # ADDED:
-    # ---------------
-    y_pred_quarters=[y_pred[i*3]+y_pred[i*3+1]+y_pred[i*3+2] for i in range(4)]
-    quarters = np.linspace(1,4,4)
-    print(y_pred)
-    print(y_pred_quarters)
-    #for i, quarter in enumerate(quarters):
-    #    quarters[i]=10
-    # ---------------
-
-    axGraph.cla()
-    draw_the_map()
-    axMap.set_title(f"C: ({x:.1f},{y:.1f}) - click rød er estimert")
+        vectors.append([p['x'],p['y'],mnd])
+    at_point = np.vstack(vectors)
+    at_point_m = poly.fit_transform(at_point)
+    pred = model.predict(at_point_m)
+    p['year']=int(sum(pred))
+    p['monthly']={
+        'graph_y': pred,
+        'graph_x': months
+    }
+    p['quarterly']={
+        'graph_y': [pred[i*3]+pred[i*3+1]+pred[i*3+2] for i in range(4)],
+        'graph_x': np.linspace(1,4,4)
+    }
+    draw()
 
 
-    axMap.text(x, y, s=label_from_nedbor(aarsnedbor), color='white', fontsize=10, ha='center', va='center')
-    axGraph.set_title(f"Nedbør per måned, Årsnedbør {int(aarsnedbor)} mm")
+# Endre mellom månedlig og kvartal visning
+def change_timeframe(label):
+    global sel_time
+    sel_time = (sel_time + 1) % len(time_options)
+    draw()
 
-    colorsPred = [color_from_nedbor(nedbor * 10) for nedbor in y_pred]
-    axMap.scatter(x, y, c=color_from_nedbor(aarsnedbor), s=size_from_nedbor(aarsnedbor) * 3.5, marker="o")
-    axMap.scatter(x, y, c="red", s=size_from_nedbor(aarsnedbor)*2.5, marker="o")
-    #axGraph.bar(months, y_pred, color=colorsPred)
-    axGraph.bar(months, y_pred, color=colorsPred)
-    draw_label_and_ticks()
-    
-    # ADDED:
-    # ---------------
-    #radio = RadioButtons(axGraph, ('2 Hz', '4 Hz', '8 Hz'))
-    #radio = RadioButtons(axGraph, ("månedlig", "kvartal", "test"),
-    #                 label_props={'color': 'cmy', 'fontsize': [12, 14, 16]},
-    #                 radio_props={'s': [16, 32, 64]})
 
-    #radio.on_clicked(radiofunc)
+# Endre datatype mellom vind / nedbør
+def change_datatype(label):
+    print('ERR! Vind er ikke implementert!')
 
-    axGraph.plot(months,y_pred)
-    axGraph.plot([aarsnedbor/12 for i in range(14)], color="red")
-    l_colors = {}
-    l_colors["under 1300"] = colors[0]
-    l_colors["1300 - 1700"] = colors[1]
-    l_colors["1700 - 2500"] = colors[2]
-    l_colors["2500 - 3200"] = colors[3]
-    l_colors["over 3200"] = colors[4]
-    l_labels = list(l_colors.keys())
-    l_handles = [plt.Rectangle((0,0),1,1, color=l_colors[label]) for label in l_labels]
-    axGraph.legend(l_handles, l_labels)
-    # ---------------
 
-    plt.draw()
+# Finn farge som tilsvarer nedbørsmengde
+def precipitation_color(n):
+    if n < color_limits[0]: return theme['precipitation'][0]
+    if n < color_limits[1]: return theme['precipitation'][1]
+    if n < color_limits[2]: return theme['precipitation'][2]
+    if n < color_limits[3]: return theme['precipitation'][3]
+    return theme['precipitation'][4]
 
-def radiofunc(label):
-    print("clicked")
 
-def draw_label_and_ticks():
-    xlabels = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D']
-    axGraph.set_xticks(np.linspace(1, 12, 12))
-    axGraph.set_xticklabels(xlabels)
+# Tegn grafikk
+def draw():
+    draw_map()
+    draw_graph()
+    fig.canvas.draw()
 
-# Kall på main funksjonen
+
+# Tegn graf
+def draw_graph():
+    ax['graph'].cla()
+    ax['graph'].set_title('Velg kartkoordinat for å vise værdata',fontweight='bold')
+    if (p is not None):
+        graph_x=p[time_options[sel_time]]['graph_x']
+        graph_y=p[time_options[sel_time]]['graph_y']
+        num=len(graph_x)
+        ax['graph'].plot(
+            graph_x,
+            graph_y,
+            color=theme['line'],
+            linewidth=2,
+        )
+        ax['graph'].plot(
+            graph_x,
+            [p['year']/num for i in range(num)],
+            color=theme['line_avg'],
+            linestyle='--',
+            linewidth=2,
+        )
+        ax['graph'].set_title('Estimert nedbør per ' + time_names[sel_time] + ' for valgt kartkoordinat ('+str(p['year'])+' mm per år)',fontweight='bold')
+        ax['graph'].set_xticks(
+            np.linspace(
+                1, 
+                num,
+                len(graph_y)
+            )
+        )
+        bar = ax['graph'].bar(
+            graph_x,
+            graph_y,
+            color=[precipitation_color(n*num) for n in graph_y],
+        )
+        ax['graph'].bar_label(
+            bar,
+            fmt='{:,.0f}\nmm',
+            label_type='center',
+            fontweight='bold',
+            color=theme['bar_label']
+        )
+        ax['graph'].set_xticklabels(['JAN', 'FEB', 'MAR', 'APR', 'MAI', 'JUN', 'JUL', 'AUG', 'SEP', 'OKT', 'NOV', 'DES'] if sel_time==0 else ['Q1', 'Q2', 'Q3', 'Q4'])
+        legend_colors=[Line2D([0], [0], color=(theme['precipitation'][i-1] if i > 0 else theme['line_avg']), lw=4) for i in reversed(range(len(theme['precipitation'])+1))]
+        legend_titles=[
+            'Over '+str(int((color_limits[3]/num))), 
+            str(int((color_limits[2]/num)))+' - '+str(int((color_limits[3]/num))), 
+            str(int((color_limits[1]/num)))+' - '+str(int((color_limits[2]/num))), 
+            str(int((color_limits[0]/num)))+' - '+str(int((color_limits[1]/num))), 
+            'Under '+str(int((color_limits[0]/num))), 
+            'Gjennomsnitt'
+        ]
+        ax['graph'].legend(
+            legend_colors,
+            legend_titles,
+            loc="upper left",
+            fancybox=False,
+            #framealpha=0,
+        )
+        ax['graph'].set_axisbelow(True)
+        ax['graph'].grid(
+            alpha=0.5,
+            color=colors[7],
+            linestyle=':',
+            axis='y',
+        )
+
+
+# Tegn kart
+def draw_map():
+    # Variabler
+    data_year = data.groupby(['x', 'y']).agg({'precipitation': 'sum'}).reset_index()
+    map_x = data_year['x'].tolist()
+    map_y = data_year['y'].tolist()
+    precipitation_year = data_year['precipitation']
+    # Tegn bakgrunnsbilde
+    ax['map'].cla()
+    ax['map'].set_title('Kartoversikt med årlig nedbørgjennomsnitt i mm',fontweight='bold')
+    #ax['map'].axis('off')
+    ax['map'].set_yticks([])
+    ax['map'].set_xticks([])
+    ax['map'].imshow(map_img, extent=(0, 13, 0, 10))
+    # Tegn fargede punkter totalnedbør per år
+    ax['map'].scatter(
+        map_x, map_y, 
+        c=[precipitation_color(n) for n in precipitation_year],
+        edgecolors=theme['precipitation_map_circle_border'],
+        s=theme['precipitation_map_circle_size'],
+        linewidths=2,
+    )
+    # Tegn tekst for punktene
+    for i in range(len(map_x)):
+        for j in reversed(range(2)):
+            ax['map'].text(
+                map_x[i], 
+                map_y[i]-theme['shadow_dist']*j, 
+                s=str(int((precipitation_year[i]))),
+                color=theme['precipitation_map_circle_fg'] if j==0 else theme['precipitation_map_circle_shadow'],
+                fontsize=theme['precipitation_map_circle_font_size'],
+                fontweight='bold',
+                ha='center',
+                va='center'
+            )
+    # Tegn sirkel for valgt punkt
+    if (p is not None):
+        ax['map'].scatter(
+            [p['x'],p['x']],
+            [p['y']-theme['shadow_dist'],p['y']],
+            c=[theme['precipitation_map_sel_shadow'],theme['precipitation_map_sel_fg']],
+            marker="x",
+            linewidths=2.5,
+            s=theme['precipitation_map_sel_point_size'],
+            )
+        for i in reversed(range(2)):
+            ax['map'].text(
+                p['x'],
+                p['y']+0.6-theme['shadow_dist']*i,
+                s=str(p['year'])+'\n(estimert)',
+                color=theme['precipitation_map_sel_fg'] if i==0 else theme['precipitation_map_sel_shadow'],
+                fontsize=theme['precipitation_map_sel_font_size'],
+                fontweight='bold',
+                ha='center',
+                va='center'
+            )
+
+
+# Kall på main funksjonen når programmet kjøres
 if __name__ == '__main__':
     main()
